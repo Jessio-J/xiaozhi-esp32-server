@@ -41,7 +41,7 @@ selected_module:
   # 将根据配置名称对应的type调用实际的LLM适配器
   LLM: ChatGLMLLM
   # TTS将根据配置名称对应的type调用实际的TTS适配器
-  TTS: EdgeTTS
+  TTS: DoubaoTTS
 
 ASR:
   FunASR:
@@ -75,9 +75,9 @@ LLM:
     type: openai
     # glm-4-flash 是免费的，但是还是需要注册填写api_key的
     # 可在这里找到你的api key https://bigmodel.cn/usercenter/proj-mgmt/apikeys
-    model_name: glm-4-flash
-    url: https://open.bigmodel.cn/api/paas/v4/
-    api_key: 你的ChatGLMLLM api key
+    model_name: Doubao-1.5-pro-32k
+    url: https://one.melontalk.com.cn/v1/
+    api_key: sk-6nHa0YMUpLdL6RtI5c55Ca7cAf824eC888518cB3026aB6E0
   OllamaLLM:
     # 定义LLM API类型
     type: ollama
@@ -104,8 +104,8 @@ TTS:
     # 山引擎语音一定要购买花钱，起步价30元，就有100并发了。如果用免费的只有2个并发，会经常报tts错误
     # 购买服务后，购买免费的音色后，可能要等半小时左右，才能使用。
     # 地址：https://console.volcengine.com/speech/service/8
-    voice: BV001_streaming
+    voice: zh_female_wanwanxiaohe_moon_bigtts
     output_file: tmp/
-    appid: 你的火山引擎语音合成服务appid
-    access_token: 你的火山引擎语音合成服务access_token
+    appid: 8198033727
+    access_token: tXKDeTx21hqBwSZJGefTcjybY2pGyfq_
     cluster: volcano_tts

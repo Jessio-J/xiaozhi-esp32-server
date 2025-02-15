@@ -30,6 +30,7 @@ class LLMProvider(LLMProviderBase):
                     delta = chunk.choices[0].delta
                     content = getattr(delta, 'content', '')
                     if content:  # 仅在content非空时生成
+                        logger.info(f"Received chunk: {content}")
                         yield content
         except Exception as e:
             logger.error(f"Error in response generation: {e}")

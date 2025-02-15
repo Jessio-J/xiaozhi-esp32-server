@@ -1,5 +1,5 @@
 # 第一阶段：构建依赖
-FROM python:3.10-slim as builder
+FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.10-slim as builder
 
 WORKDIR /app
 

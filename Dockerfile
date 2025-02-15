@@ -1,5 +1,5 @@
 # 第一阶段：构建依赖
-FROM ccr.ccs.tencentyun.com/zdhn_image/python310:latest as builder
+FROM ccr.ccs.tencentyun.com/lisysource/lisypython310:latest as builder
 
 WORKDIR /app
 

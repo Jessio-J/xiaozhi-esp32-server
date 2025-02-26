@@ -1,5 +1,6 @@
 from config.logger import setup_logging
-
+from core.api.user_device import UserDeviceAPI
+from core.api.client import APIClient
 TAG = __name__
 logger = setup_logging()
 
@@ -22,6 +23,9 @@ class AuthMiddleware:
         self.allowed_devices = set(
             self.auth_config.get("allowed_devices", [])
         )
+        # 初始化API客户端
+        self.api_client = APIClient()
+        self.user_device_api = UserDeviceAPI(self.api_client)
 
     async def authenticate(self, headers):
         """验证连接请求"""
@@ -52,3 +56,16 @@ class AuthMiddleware:
     def get_token_name(self, token):
         """获取token对应的设备名称"""
         return self.tokens.get(token)
+
+    async def register_device(self, device_id):
+        """注册设备到后端
+        
+        Args:
+            device_id: 设备ID
+        """
+        try:
+            await self.user_device_api.register_device(device_id,  device_id)
+            self.logger.bind(tag=TAG).info(f"Device {device_id} registered successfully")
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"Failed to register device {device_id}: {e}")
+            raise

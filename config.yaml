@@ -22,6 +22,10 @@ server:
     # 可选:设备白名单，如果设置了白名单，那么白名单的机器无论是什么token都可以连接。
     #allowed_devices:
     #  - "24:0A:C4:1D:3B:F0"  # MAC地址列表
+
+api:
+  base_url: "https://api.melontalk.com.cn"
+
 manager:
   # 是否启用管理后台
   # 目前这个模块还在开发中，建议：不要修改enabled选项

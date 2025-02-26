@@ -69,3 +69,14 @@ class UserDeviceAPI:
             Dict[str, Any]: 更新结果
         """
         return await self.client.put(f'devices/{device_id}', json={'name': name})
+    
+    async def register_device(self, device_mac: str) -> Dict[str, Any]:
+        """注册设备
+        
+        Args:
+            device_mac: 设备MAC地址
+            
+        Returns:
+            Dict[str, Any]: 注册结果
+        """
+        return await self.client.post('device/register', json={'deviceMac': device_mac})

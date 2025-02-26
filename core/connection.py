@@ -121,6 +121,11 @@ class ConnectionHandler:
                     self.private_config = None
                     raise
 
+            # 同步注册设备到后端
+            if device_id:
+                self.logger.bind(tag=TAG).info(f"Registering device {device_id} to backend")
+                await self.auth.register_device(device_id)
+
             # 认证通过,继续处理
             self.websocket = ws
             self.session_id = str(uuid.uuid4())

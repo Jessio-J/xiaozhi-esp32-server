@@ -65,7 +65,7 @@ class AuthMiddleware:
         """
         try:
             await self.user_device_api.register_device(device_id,  device_id)
-            self.logger.bind(tag=TAG).info(f"Device {device_id} registered successfully")
+            logger.bind(tag=TAG).info(f"Device {device_id} registered successfully")
         except Exception as e:
-            self.logger.bind(tag=TAG).error(f"Failed to register device {device_id}: {e}")
+            logger.bind(tag=TAG).error(f"Failed to register device {device_id}: {e}")
             raise

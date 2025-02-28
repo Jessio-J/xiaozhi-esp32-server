@@ -24,7 +24,8 @@ server:
     #  - "24:0A:C4:1D:3B:F0"  # MAC地址列表
 
 api:
-  base_url: "https://api.melontalk.com.cn/api"
+  base_url: "http://api.melontalk.com.cn/api"
+  verify_ssl: false
 
 manager:
   # 是否启用管理后台

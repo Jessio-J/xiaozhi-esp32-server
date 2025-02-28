@@ -1,6 +1,7 @@
 import aiohttp
 from typing import Any, Dict, Optional
 from config.settings import load_config
+import ssl
 
 class APIClient:
     """基础HTTP客户端类，处理所有API请求"""
@@ -8,12 +9,20 @@ class APIClient:
     def __init__(self):
         config = load_config()
         self.base_url = config['api']['base_url']
+        self.verify_ssl = config['api'].get('verify_ssl', True)
         self.session: Optional[aiohttp.ClientSession] = None
     
     async def _ensure_session(self):
         """确保aiohttp session已创建"""
         if self.session is None:
-            self.session = aiohttp.ClientSession()
+            if not self.verify_ssl:
+                ssl_context = ssl.create_default_context()
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+                connector = aiohttp.TCPConnector(ssl=ssl_context)
+                self.session = aiohttp.ClientSession(connector=connector)
+            else:
+                self.session = aiohttp.ClientSession()
     
     async def close(self):
         """关闭HTTP会话"""

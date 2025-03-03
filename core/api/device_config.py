@@ -68,3 +68,14 @@ class DeviceConfigAPI:
             Dict[str, Any]: 恢复结果
         """
         return await self.client.post(f'devices/{device_id}/config/restore', json={'version_id': version_id})
+    
+    async def get_device_config_by_mac(self, device_mac: str) -> Dict[str, Any]:
+        """通过设备MAC地址获取配置信息
+        
+        Args:
+            device_mac: 设备MAC地址
+            
+        Returns:
+            Dict[str, Any]: 设备配置信息
+        """
+        return await self.client.get('device/config', params={'deviceMac': device_mac})

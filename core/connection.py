@@ -18,6 +18,7 @@ from core.handle.audioHandle import handleAudioMessage, sendAudioMessage
 from config.private_config import PrivateConfig
 from core.auth import AuthMiddleware, AuthenticationError
 from core.utils.auth_code_gen import AuthCodeGenerator  # 添加导入
+from config.device_config import DeviceConfig
 
 TAG = __name__
 
@@ -32,6 +33,7 @@ class ConnectionHandler:
         self.session_id = None
         self.prompt = None
         self.welcome_msg = None
+        self.device_config = None  # 添加设备配置实例变量
 
         # 客户端状态相关
         self.client_abort = False
@@ -125,6 +127,12 @@ class ConnectionHandler:
             if device_id:
                 self.logger.bind(tag=TAG).info(f"Registering device {device_id} to backend")
                 await self.auth.register_device(device_id)
+
+            # 加载设备配置信息
+            if device_id:
+                self.device_config = DeviceConfig(device_id, self.auth.api_client)
+                await self.device_config.load_config()
+                self.logger.bind(tag=TAG).info(f"Loaded device config for device {device_id}")
 
             # 认证通过,继续处理
             self.websocket = ws

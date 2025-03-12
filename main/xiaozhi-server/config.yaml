@@ -155,9 +155,9 @@ LLM:
     type: openai
     # glm-4-flash 是免费的，但是还是需要注册填写api_key的
     # 可在这里找到你的api key https://bigmodel.cn/usercenter/proj-mgmt/apikeys
-    model_name: glm-4-flash
-    url: https://open.bigmodel.cn/api/paas/v4/
-    api_key: 你的chat-glm web key
+    model_name: Doubao-1.5-pro-32k
+    url: https://one.melontalk.com.cn/v1/
+    api_key: sk-6nHa0YMUpLdL6RtI5c55Ca7cAf824eC888518cB3026aB6E0
   OllamaLLM:
     # 定义LLM API类型
     type: ollama
@@ -220,11 +220,11 @@ TTS:
     # 购买服务后，购买免费的音色后，可能要等半小时左右，才能使用。
     # 地址：https://console.volcengine.com/speech/service/8
     api_url: https://openspeech.bytedance.com/api/v1/tts
-    voice: BV001_streaming
+    voice: zh_female_wanwanxiaohe_moon_bigtts
     output_file: tmp/
     authorization: "Bearer;"
-    appid: 你的火山引擎语音合成服务appid
-    access_token: 你的火山引擎语音合成服务access_token
+    appid: 8198033727
+    access_token: tXKDeTx21hqBwSZJGefTcjybY2pGyfq_
     cluster: volcano_tts
   CosyVoiceSiliconflow:
     type: siliconflow
@@ -357,11 +357,11 @@ TTS:
     # 定义TTS API类型
     type: aliyun
     output_file: tmp/
-    appkey: 你的阿里云智能语音交互服务项目Appkey
+    appkey: ggrvYqdsZESMRyML
     token: 你的阿里云智能语音交互服务AccessToken，临时的24小时，要长期用下方的access_key_id，access_key_secret
     voice: xiaoyun
-    access_key_id: 你的阿里云账号access_key_id
-    access_key_secret: 你的阿里云账号access_key_secret
+    access_key_id: LTAI5tALb2ATBJYBrKRBz2mE
+    access_key_secret: 9YunOouKfFHRwpw46xEX2B747bEGp6
 
     # 以下可不用设置，使用默认设置
     # format: wav

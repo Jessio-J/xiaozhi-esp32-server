@@ -57,15 +57,16 @@ class AuthMiddleware:
         """获取token对应的设备名称"""
         return self.tokens.get(token)
 
-    async def register_device(self, device_id):
+    async def register_device(self, device_id, device_role=None):
         """注册设备到后端
         
         Args:
             device_id: 设备ID
+            device_role: 设备角色类型
         """
         try:
-            await self.user_device_api.register_device(device_id)
-            logger.bind(tag=TAG).info(f"Device {device_id} registered successfully")
+            await self.user_device_api.register_device(device_id, device_role)
+            logger.bind(tag=TAG).info(f"Device {device_id} with role {device_role} registered successfully")
         except Exception as e:
-            logger.bind(tag=TAG).error(f"Failed to register device {device_id}: {e}")
+            logger.bind(tag=TAG).error(f"Failed to register device {device_id} with role {device_role}: {e}")
             raise

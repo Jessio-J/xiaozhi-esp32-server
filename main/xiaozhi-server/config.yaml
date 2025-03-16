@@ -4,6 +4,9 @@
 # 这样做，可以避免在提交代码的时候，错误地提交密钥信息，保护您的密钥安全。
 
 # 服务器基础配置(Basic server configuration)
+api:
+  base_url: http://aiapi.melontalk.com.cn
+  verify_ssl: false
 server:
   # 服务器监听地址和端口(Server listening address and port)
   ip: 0.0.0.0

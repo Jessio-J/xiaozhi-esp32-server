@@ -110,12 +110,13 @@ class ConnectionHandler:
             await self.auth.authenticate(self.headers)
 
             device_id = self.headers.get("device-id", None)
+            device_role = self.headers.get("device-role", None)
             self.memory.init_memory(device_id, self.llm)
             self.intent.set_llm(self.llm)
 
             # Load private configuration if device_id is provided
             bUsePrivateConfig = self.config.get("use_private_config", False)
-            self.logger.bind(tag=TAG).info(f"bUsePrivateConfig: {bUsePrivateConfig}, device_id: {device_id}")
+            self.logger.bind(tag=TAG).info(f"bUsePrivateConfig: {bUsePrivateConfig}, device_id: {device_id}, device_role: {device_role}")
             if bUsePrivateConfig and device_id:
                 try:
                     self.private_config = PrivateConfig(device_id, self.config, self.auth_code_gen)
@@ -143,7 +144,7 @@ class ConnectionHandler:
             # 同步注册设备到后端
             if device_id:
                 self.logger.bind(tag=TAG).info(f"Registering device {device_id} to backend")
-                await self.auth.register_device(device_id)
+                await self.auth.register_device(device_id,device_role)
 
             # 加载设备配置信息
             if device_id:

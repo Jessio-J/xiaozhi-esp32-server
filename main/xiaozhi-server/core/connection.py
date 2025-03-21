@@ -197,7 +197,7 @@ class ConnectionHandler:
             await handleAudioMessage(self, message)
 
     def _initialize_components(self):
-        self.prompt = self.config["prompt"]
+        self.prompt = self.device_config.get_config("prompt")
         if self.private_config:
             self.prompt = self.private_config.private_config.get("prompt", self.prompt)
         # 赋予LLM时间观念

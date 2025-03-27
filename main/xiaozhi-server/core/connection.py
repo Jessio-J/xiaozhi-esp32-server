@@ -23,6 +23,7 @@ from config.private_config import PrivateConfig
 from core.auth import AuthMiddleware, AuthenticationError
 from core.utils.auth_code_gen import AuthCodeGenerator
 from config.device_config import DeviceConfig
+from core.utils import tts
 
 TAG = __name__
 
@@ -84,6 +85,7 @@ class ConnectionHandler:
         # tts相关变量
         self.tts_first_text_index = -1
         self.tts_last_text_index = -1
+        self.tts_map = {}
 
         # iot相关变量
         self.iot_descriptors = {}
@@ -202,9 +204,9 @@ class ConnectionHandler:
             await handleAudioMessage(self, message)
 
     def _initialize_components(self):
-        self.prompt = self.device_config.get_config("prompt")
+        self.prompt = self.config["prompt"]
         if self.private_config:
-            self.prompt = self.private_config.private_config.get("prompt", self.prompt)
+            self.prompt = self.device_config.get_config_value("prompt", self.prompt)
 
         self.client_ip_info = get_ip_info(self.client_ip)
         self.logger.bind(tag=TAG).info(f"Client ip info: {self.client_ip_info}")
@@ -260,7 +262,8 @@ class ConnectionHandler:
             self.logger.bind(tag=TAG).debug(f"记忆内容: {memory_str}")
             llm_responses = self.llm.response(
                 self.session_id,
-                self.dialogue.get_llm_dialogue_with_memory(memory_str)
+                self.dialogue.get_llm_dialogue_with_memory(memory_str),
+                config=self.device_config.get_config_value("llm")
             )
         except Exception as e:
             self.logger.bind(tag=TAG).error(f"LLM 处理出错 {query}: {e}")
@@ -349,7 +352,8 @@ class ConnectionHandler:
             llm_responses = self.llm.response_with_functions(
                 self.session_id,
                 self.dialogue.get_llm_dialogue_with_memory(memory_str),
-                functions=functions
+                functions=functions,
+                config=self.device_config.get_config_value("llm")
             )
         except Exception as e:
             self.logger.bind(tag=TAG).error(f"LLM 处理出错 {query}: {e}")
@@ -559,7 +563,16 @@ class ConnectionHandler:
         if text is None or len(text) <= 0:
             self.logger.bind(tag=TAG).info(f"无需tts转换，query为空，{text}")
             return None, text, text_index
-        tts_file = self.tts.to_tts(text)
+        
+        tts_config = self.device_config.get_config_value("tts")
+        if tts_config is None:
+            self.logger.bind(tag=TAG).info(f"tts配置为空")
+            return None, text, text_index
+        cur_tts = self.get_or_create_tts(tts_config)
+        if cur_tts is None:
+            self.logger.bind(tag=TAG).info(f"tts实例为空")
+            return None, text, text_index
+        tts_file = cur_tts.to_tts(text)
         if tts_file is None:
             self.logger.bind(tag=TAG).error(f"tts转换失败，{text}")
             return None, text, text_index
@@ -605,3 +618,36 @@ class ConnectionHandler:
             self.close_after_chat = True
         except Exception as e:
             self.logger.bind(tag=TAG).error(f"Chat and close error: {str(e)}")
+
+    def get_or_create_tts(self, tts_config):
+        """根据tts_config获取或创建TTS实例
+        Args:
+            tts_config: TTS配置信息
+        Returns:
+            TTSProviderBase: TTS实例
+        """
+        if not tts_config or 'platform' not in tts_config:
+            self.logger.bind(tag=TAG).error("TTS配置无效或缺少platform字段")
+            return None
+            
+        platform = tts_config['platform']
+        
+        # 如果实例已存在则直接返回
+        if platform in self.tts_map:
+            return self.tts_map[platform]
+            
+        try:
+            # 创建新的TTS实例
+            tts_instance = tts.create_instance(
+                platform,
+                tts_config
+            )
+            
+            # 保存实例到map中
+            self.tts_map[platform] = tts_instance
+            self.logger.bind(tag=TAG).info(f"成功创建TTS实例: {platform}")
+            
+            return tts_instance
+        except Exception as e:
+            self.logger.bind(tag=TAG).error(f"创建TTS实例失败: {platform}, 错误: {e}")
+            return None

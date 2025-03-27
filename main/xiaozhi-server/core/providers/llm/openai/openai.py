@@ -2,31 +2,34 @@ import openai
 from config.logger import setup_logging
 from core.utils.util import check_model_key
 from core.providers.llm.base import LLMProviderBase
+from threading import Lock
 
 TAG = __name__
 logger = setup_logging()
 
 
 class LLMProvider(LLMProviderBase):
-    def __init__(self, config):
-        self.model_name = config.get("model_name")
-        self.api_key = config.get("api_key")
-        if 'base_url' in config:
-            self.base_url = config.get("base_url")
-        else:
-            self.base_url = config.get("url")
-        self.max_tokens = config.get("max_tokens", 500)
+    def __init__(self):
+        self.client_map = {}
 
-        check_model_key("LLM", self.api_key)
-        self.client = openai.OpenAI(api_key=self.api_key, base_url=self.base_url)
+    def _get_or_create_client(self, config):
+        model_name = config.get("model_name")
+        if model_name not in self.client_map:
+            api_key = config.get("api_key")
+            base_url = config.get("base_url") if 'base_url' in config else config.get("url")
+            check_model_key("LLM", api_key)
+            self.client_map[model_name] = openai.OpenAI(api_key=api_key, base_url=base_url)
+        return self.client_map[model_name]
 
-    def response(self, session_id, dialogue):
+    def response(self, session_id, dialogue, config = None):
         try:
-            responses = self.client.chat.completions.create(
+            client = self._get_or_create_client(config)
+            max_tokens = config.get("max_tokens", 500)
+            responses = client.chat.completions.create(
                 model=self.model_name,
                 messages=dialogue,
                 stream=True,
-                max_tokens=self.max_tokens,
+                max_tokens=max_tokens,
             )
 
             is_active = True
@@ -51,9 +54,10 @@ class LLMProvider(LLMProviderBase):
         except Exception as e:
             logger.bind(tag=TAG).error(f"Error in response generation: {e}")
 
-    def response_with_functions(self, session_id, dialogue, functions=None):
+    def response_with_functions(self, session_id, dialogue, functions=None,config=None):
         try:
-            stream = self.client.chat.completions.create(
+            client = self._get_or_create_client(config)
+            stream = client.chat.completions.create(
                 model=self.model_name,
                 messages=dialogue,
                 stream=True,

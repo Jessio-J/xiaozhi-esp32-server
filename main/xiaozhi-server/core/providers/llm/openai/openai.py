@@ -16,7 +16,9 @@ class LLMProvider(LLMProviderBase):
         model_name = config.get("model_name")
         if model_name not in self.client_map:
             api_key = config.get("api_key")
-            base_url = config.get("base_url") if 'base_url' in config else config.get("url")
+            base_url = config.get("base_url")
+            if base_url:
+                base_url = f"{base_url.rstrip('/')}/v1/"
             check_model_key("LLM", api_key)
             self.client_map[model_name] = openai.OpenAI(api_key=api_key, base_url=base_url)
         return self.client_map[model_name]

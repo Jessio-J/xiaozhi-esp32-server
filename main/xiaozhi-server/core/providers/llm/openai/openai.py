@@ -67,7 +67,8 @@ class LLMProvider(LLMProviderBase):
             )
 
             for chunk in stream:
-                yield chunk.choices[0].delta.content, chunk.choices[0].delta.tool_calls
+                if chunk.choices and len(chunk.choices) > 0:
+                    yield chunk.choices[0].delta.content, chunk.choices[0].delta.tool_calls
 
         except Exception as e:
             logger.bind(tag=TAG).error(f"Error in function call streaming: {e}")

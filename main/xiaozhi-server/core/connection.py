@@ -380,7 +380,7 @@ class ConnectionHandler:
         function_arguments = ""
         content_arguments = ""
         for response in llm_responses:
-            self.logger.bind(tag=TAG).debug(f"LLM 响应: {response}")
+            self.logger.bind(tag=TAG).info(f"LLM 响应: {response}")
             content, tools_call = response
             if content is not None and len(content) > 0:
                 if len(response_message) <= 0 and (content == "```" or "<tool_call>" in content):
@@ -466,8 +466,10 @@ class ConnectionHandler:
         # 处理最后剩余的文本
         full_text = "".join(response_message)
         remaining_text = full_text[processed_chars:]
+        self.logger.bind(tag=TAG).info(f"Chat with function remaining_text: {remaining_text}")
         if remaining_text:
             segment_text = get_string_no_punctuation_or_emoji(remaining_text)
+            self.logger.bind(tag=TAG).info(f"Chat with function segment_text: {segment_text}")
             if segment_text:
                 text_index += 1
                 self.recode_first_last_text(segment_text, text_index)

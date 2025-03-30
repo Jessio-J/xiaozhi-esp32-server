@@ -1,10 +1,12 @@
 from typing import List, Optional, Any, Dict
 from datetime import datetime
 from .base_model import BaseModel
-
+from config.logger import setup_logging
+TAG = __name__
 class UserDevice(BaseModel):
     def __init__(self):
         super().__init__()
+        self.logger = setup_logging()
 
     def register_device(self, device_id: str, device_config_id: str) -> int:
         """
@@ -16,6 +18,7 @@ class UserDevice(BaseModel):
         query = "SELECT * FROM device_bind WHERE deviceMac = %s"
         result = self.execute_query(query, (device_id,))
         if result:
+            self.logger.info(f"设备已存在：{result}")
             return 1  # 设备已存在，返回1
         device_name = f"AI玩具-{device_id[-5:]}"
         update = "INSERT INTO device_bind (deviceMac, deviceConfigId, userId, deviceName) VALUES (%s, %s, 9, %s)"

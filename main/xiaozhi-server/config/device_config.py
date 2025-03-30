@@ -72,4 +72,5 @@ class DeviceConfig:
         Returns:
             Any: 配置项的值
         """
+        self.logger.bind(tag=TAG).info(f"get config value : {key}")
         return self.config_data.get(key, default) if self.config_data else default

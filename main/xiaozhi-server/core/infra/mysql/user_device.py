@@ -19,7 +19,7 @@ class UserDevice(BaseModel):
             return 1  # 设备已存在，返回1
         device_name = f"AI玩具-{device_id[-5:]}"
         update = "INSERT INTO device_bind (deviceMac, deviceConfigId, userId, deviceName) VALUES (%s, %s, 9, %s)"
-        return self.execute_update(update, (device_id, device_config_id))
+        return self.execute_update(update, (device_id, device_config_id,device_name))
 
     def get_device_config(self, device_id: str) -> Optional[Dict[str, Any]]:
         """

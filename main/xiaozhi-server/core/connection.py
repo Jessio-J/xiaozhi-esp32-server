@@ -161,7 +161,7 @@ class ConnectionHandler:
                     
                     start_time = time.time()
                     self.device_config = DeviceConfig(device_id, user_device)
-                    await self.device_config.load_config()
+                    self.device_config.load_config()
                     config_load_time = (time.time() - start_time) * 1000
                     self.logger.bind(tag=TAG).info(f"Device config loading took {config_load_time:.2f} ms")
                     self.logger.bind(tag=TAG).info(f"Loaded device config for device {device_id}")

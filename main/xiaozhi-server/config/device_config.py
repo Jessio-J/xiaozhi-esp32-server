@@ -1,6 +1,6 @@
 from typing import Dict, Any
 from core.infra.mysql.user_device import UserDevice
-
+from config.logger import setup_logging
 class DeviceConfig:
     """设备配置管理类"""
     
@@ -14,15 +14,16 @@ class DeviceConfig:
         self.device_mac = device_mac
         self.user_device_dao = user_device
         self.config_data = None
+        self.logger = setup_logging()
     
-    async def load_config(self) -> Dict[str, Any]:
+    def load_config(self) -> Dict[str, Any]:
         """加载设备配置信息
         
         Returns:
             Dict[str, Any]: 设备配置信息
         """
         try:
-            config_data_from_db = await self.user_device_dao.get_device_config(self.device_mac)
+            config_data_from_db = self.user_device_dao.get_device_config(self.device_mac)
             llm_config = {
                 "model_name": config_data_from_db.get("model", ""),
                 "max_tokens": config_data_from_db.get("maxResponseTokens", 0),
@@ -46,6 +47,7 @@ class DeviceConfig:
                 "llm": llm_config,
                 "tts": tts_config,
             }
+            self.logger.bind(tag=TAG).info(f"init config done :\n{result}")
             self.config_data = result
             return self.config_data
         except Exception as e:

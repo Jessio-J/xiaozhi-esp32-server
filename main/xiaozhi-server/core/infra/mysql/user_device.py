@@ -18,7 +18,7 @@ class UserDevice(BaseModel):
         query = "SELECT * FROM device_bind WHERE deviceMac = %s"
         result = self.execute_query(query, (device_id,))
         if result:
-            self.logger.info(f"设备已存在：{result}")
+            self.logger.bind(tag=TAG).info(f"设备已存在：{result}")
             return 1  # 设备已存在，返回1
         device_name = f"AI玩具-{device_id[-5:]}"
         update = "INSERT INTO device_bind (deviceMac, deviceConfigId, userId, deviceName) VALUES (%s, %s, 9, %s)"

@@ -359,6 +359,7 @@ class ConnectionHandler:
             # self.logger.bind(tag=TAG).info(f"对话记录: {self.dialogue.get_llm_dialogue_with_memory(memory_str)}")
 
             # 使用支持functions的streaming接口
+            self.logger.bind(tag=TAG).info(f"LLM 配置: {self.device_config.get_config_value('llm')}")
             llm_responses = self.llm.response_with_functions(
                 self.session_id,
                 self.dialogue.get_llm_dialogue_with_memory(memory_str),

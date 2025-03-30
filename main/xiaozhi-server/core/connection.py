@@ -380,6 +380,7 @@ class ConnectionHandler:
         function_arguments = ""
         content_arguments = ""
         for response in llm_responses:
+            self.logger.bind(tag=TAG).debug(f"LLM 响应: {response}")
             content, tools_call = response
             if content is not None and len(content) > 0:
                 if len(response_message) <= 0 and (content == "```" or "<tool_call>" in content):

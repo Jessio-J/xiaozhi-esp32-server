@@ -9,7 +9,7 @@ logger = setup_logging()
 
 
 class LLMProvider(LLMProviderBase):
-    def __init__(self):
+    def __init__(self,config):
         self.client_map = {}
 
     def _get_or_create_client(self, config):

@@ -26,7 +26,7 @@ class LLMProvider(LLMProviderBase):
             client = self._get_or_create_client(config)
             max_tokens = config.get("max_tokens", 500)
             responses = client.chat.completions.create(
-                model=self.model_name,
+                model=config.get("model_name"),
                 messages=dialogue,
                 stream=True,
                 max_tokens=max_tokens,
@@ -58,7 +58,7 @@ class LLMProvider(LLMProviderBase):
         try:
             client = self._get_or_create_client(config)
             stream = client.chat.completions.create(
-                model=self.model_name,
+                model=config.get("model_name"),
                 messages=dialogue,
                 stream=True,
                 tools=functions

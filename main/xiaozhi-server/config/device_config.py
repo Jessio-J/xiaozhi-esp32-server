@@ -1,11 +1,10 @@
 from typing import Dict, Any
-from core.api.device_config import DeviceConfigAPI
-from core.api.client import APIClient
+from core.infra.mysql.user_device import UserDevice
 
 class DeviceConfig:
     """设备配置管理类"""
     
-    def __init__(self, device_mac: str, api_client: APIClient):
+    def __init__(self, device_mac: str, user_device: UserDevice):
         """初始化设备配置管理
         
         Args:
@@ -13,7 +12,7 @@ class DeviceConfig:
             api_client: API客户端实例
         """
         self.device_mac = device_mac
-        self.device_config_api = DeviceConfigAPI(api_client)
+        self.user_device_dao = user_device
         self.config_data = None
     
     async def load_config(self) -> Dict[str, Any]:
@@ -23,7 +22,31 @@ class DeviceConfig:
             Dict[str, Any]: 设备配置信息
         """
         try:
-            self.config_data = await self.device_config_api.get_device_config_by_mac(self.device_mac)
+            config_data_from_db = await self.user_device_dao.get_device_config(self.device_mac)
+            llm_config = {
+                "model_name": config_data_from_db.get("model", ""),
+                "max_tokens": config_data_from_db.get("maxResponseTokens", 0),
+                "api_key": config_data_from_db.get("modelKey", ""),
+                "base_url": config_data_from_db.get("proxyUrl", ""),
+                "max_model_tokens": config_data_from_db.get("maxModelTokens", 0),
+            }
+
+            tts_config = {
+               "appid": "8198033727",
+               "access_token": "tXKDeTx21hqBwSZJGefTcjybY2pGyfq_",
+               "cluster": "volcano_tts",
+               "voice": config_data_from_db.get("voiceKey", ""),
+               "api_url": "https://openspeech.bytedance.com/api/v1/tts",
+               "authorization": "Bearer;",
+               "platform": "doubao",
+               "output_dir": "tmp/"
+            }
+            result = {
+                "prompt": config_data_from_db.get("preset", ""),
+                "llm": llm_config,
+                "tts": tts_config,
+            }
+            self.config_data = result
             return self.config_data
         except Exception as e:
             raise Exception(f"加载设备配置失败: {str(e)}")

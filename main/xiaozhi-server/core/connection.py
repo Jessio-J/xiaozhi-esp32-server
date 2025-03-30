@@ -24,6 +24,7 @@ from core.auth import AuthMiddleware, AuthenticationError
 from core.utils.auth_code_gen import AuthCodeGenerator
 from config.device_config import DeviceConfig
 from core.utils import tts
+from core.infra.mysql.user_device import UserDevice
 
 TAG = __name__
 
@@ -147,16 +148,25 @@ class ConnectionHandler:
                     self.private_config = None
                     raise
 
-            # 同步注册设备到后端
+            # 同步注册设备到数据库并加载配置信息
             if device_id:
-                self.logger.bind(tag=TAG).info(f"Registering device {device_id} to backend")
-                await self.auth.register_device(device_id,device_role)
-
-            # 加载设备配置信息
-            if device_id:
-                self.device_config = DeviceConfig(device_id, self.auth.api_client)
-                await self.device_config.load_config()
-                self.logger.bind(tag=TAG).info(f"Loaded device config for device {device_id}")
+                try:
+                    self.logger.bind(tag=TAG).info(f"Registering device {device_id} to database")
+                    start_time = time.time()
+                    user_device = UserDevice()
+                    device_config_id = self.convert_device_role(device_role)
+                    user_device.register_device(device_id, device_config_id)
+                    register_time = (time.time() - start_time) * 1000
+                    self.logger.bind(tag=TAG).info(f"Device registration took {register_time:.2f} ms")
+                    
+                    start_time = time.time()
+                    self.device_config = DeviceConfig(device_id, user_device)
+                    await self.device_config.load_config()
+                    config_load_time = (time.time() - start_time) * 1000
+                    self.logger.bind(tag=TAG).info(f"Device config loading took {config_load_time:.2f} ms")
+                    self.logger.bind(tag=TAG).info(f"Loaded device config for device {device_id}")
+                except Exception as e:
+                    self.logger.bind(tag=TAG).error(f"Failed to register device {device_id} to database: {e}")
 
             # 认证通过,继续处理
             self.websocket = ws
@@ -284,7 +294,7 @@ class ConnectionHandler:
             current_text = full_text[processed_chars:]  # 从未处理的位置开始
 
             # 查找最后一个有效标点
-            punctuations = ("。", "？", "！", "；", "：")
+            punctuations = (",","，","。", "？", "！", "；", "：")
             last_punct_pos = -1
             for punct in punctuations:
                 pos = current_text.rfind(punct)
@@ -651,3 +661,19 @@ class ConnectionHandler:
         except Exception as e:
             self.logger.bind(tag=TAG).error(f"创建TTS实例失败: {platform}, 错误: {e}")
             return None
+    
+    def convert_device_role(self, device_role: str) -> int:
+        """将设备角色转换为配置ID
+        
+        Args:
+            device_role: 设备角色类型
+            
+        Returns:
+            int: 对应的配置ID
+        """
+        role_mapping = {
+            'TAIWANESE_GIRLFRIEND': '1',
+            'ENGLISH_TEACHER': '2',
+            'STORYTELLER': '3'
+        }
+        return role_mapping.get(device_role, '1')  # 默认返回1

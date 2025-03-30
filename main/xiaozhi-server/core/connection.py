@@ -652,7 +652,8 @@ class ConnectionHandler:
             # 创建新的TTS实例
             tts_instance = tts.create_instance(
                 platform,
-                tts_config
+                tts_config,
+                delete_audio_file=True
             )
             
             # 保存实例到map中

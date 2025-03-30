@@ -11,7 +11,7 @@ MYSQL_CONFIG: Dict[str, Any] = {
     
     # 连接池配置
     'pool_name': 'mypool',
-    'pool_size': 50,
+    'pool_size': 16,
     'pool_reset_session': True,
     
     # 额外配置

@@ -1,6 +1,7 @@
 from typing import Dict, Any
 from core.infra.mysql.user_device import UserDevice
 from config.logger import setup_logging
+TAG = __name__
 class DeviceConfig:
     """设备配置管理类"""
     

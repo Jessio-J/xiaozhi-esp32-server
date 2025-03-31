@@ -17,7 +17,9 @@ def auto_import_modules(package_name):
     whitelist = [
         'handle_exit_intent',
         'get_time',
-        'raise_and_lower_the_volume'
+        'raise_and_lower_the_volume',
+        'get_news',
+        'get_weather',
     ]
 
     # 获取包的路径

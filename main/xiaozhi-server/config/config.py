@@ -6,7 +6,7 @@ MYSQL_CONFIG: Dict[str, Any] = {
     'port': 3306,
     'user': 'root',
     'password': 'b5bd5cd81fc2ab28',
-    'database': 'melontalkai',
+    'database': 'samewayai',
     'charset': 'utf8mb4',
     
     # 连接池配置

@@ -26,11 +26,11 @@ class DeviceConfig:
         try:
             config_data_from_db = self.user_device_dao.get_device_config(self.device_mac)
             llm_config = {
-                "model_name": config_data_from_db.get("model", ""),
-                "max_tokens": config_data_from_db.get("maxResponseTokens", 0),
+                "model_name": config_data_from_db.get("model", "gpt-4o-mini"),
+                "max_tokens": config_data_from_db.get("maxResponseTokens", 4096),
                 "api_key": config_data_from_db.get("modelKey", ""),
                 "base_url": config_data_from_db.get("proxyUrl", ""),
-                "max_model_tokens": config_data_from_db.get("maxModelTokens", 0),
+                "max_model_tokens": config_data_from_db.get("maxModelTokens", 2048),
             }
 
             tts_config = {

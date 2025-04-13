@@ -31,12 +31,11 @@ class UserDevice(BaseModel):
         :return: 设备配置信息
         """
         query = """
-            select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
+            select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,a.baseUrl proxyUrl,a.apiKey modelKey from
             (select d.*, a.name appName, a.preset
             from (select b.deviceMac, c.* from device_bind b
                 left join device_config c on b.deviceConfigId = c.id where deviceMac = %s) d
-            left join app a on d.relatedAppId = a.id) f
-            left join models m on f.modelId = m.id;
+            left join app a on d.relatedAppId = a.id) f;
         """
         result = self.execute_query(query, (device_id,))
         if result:

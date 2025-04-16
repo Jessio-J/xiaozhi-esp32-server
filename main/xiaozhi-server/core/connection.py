@@ -110,7 +110,7 @@ class ConnectionHandler:
             # 获取并验证headers
             self.headers = dict(ws.request.headers)
             # 获取客户端ip地址
-            self.client_ip = ws.remote_address[0]
+            self.client_ip = self.headers.get("x-real-ip", None)
             self.logger.bind(tag=TAG).info(f"{self.client_ip} conn - Headers: {self.headers}")
 
             # 进行认证

@@ -18,7 +18,6 @@ class BaseModel:
         Returns:
             List[Dict[str, Any]]: 查询结果列表
         """
-        self.logger.bind(tag=TAG).info(f"执行查询语句 :\n{query}\n参数 : {params}")
         start_time = time.time()
         connection = self.db_pool.get_connection()
         get_conn_time = time.time()
@@ -53,7 +52,6 @@ class BaseModel:
         Returns:
             int: 受影响的行数
         """
-        self.logger.bind(tag=TAG).info(f"执行更新语句 :\n{query}\n参数 : {params}")
         start_time = time.time()
         connection = self.db_pool.get_connection()
         get_conn_time = time.time()

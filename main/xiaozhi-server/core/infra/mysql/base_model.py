@@ -2,7 +2,7 @@ from typing import List, Optional, Any, Dict
 from .db_pool import DatabasePool
 from config.logger import setup_logging
 import time
-
+TAG = __name__
 class BaseModel:
     def __init__(self):
         self.db_pool = DatabasePool()

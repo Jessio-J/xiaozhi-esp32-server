@@ -18,7 +18,6 @@ def auto_import_modules(package_name):
         'handle_exit_intent',
         'get_time',
         'raise_and_lower_the_volume',
-        'get_news',
         'get_weather',
     ]
 

@@ -3,9 +3,9 @@ from typing import Dict, Any
 # MySQL数据库配置
 MYSQL_CONFIG: Dict[str, Any] = {
     'host': 'localhost',
-    'port': 13306,
+    'port': 3306,
     'user': 'root',
-    'password': 'd83871ff6b3dc548',
+    'password': 'b5bd5cd81fc2ab28',
     'database': 'samewayai',
     'charset': 'utf8mb4',
     

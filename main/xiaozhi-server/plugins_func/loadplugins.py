@@ -19,6 +19,7 @@ def auto_import_modules(package_name):
         'get_time',
         'raise_and_lower_the_volume',
         'get_weather',
+        'get_news'
     ]
 
     # 获取包的路径

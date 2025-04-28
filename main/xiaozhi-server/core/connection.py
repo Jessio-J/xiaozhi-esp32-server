@@ -219,7 +219,8 @@ class ConnectionHandler:
             await self.websocket.send(json.dumps(self.welcome_msg))
 
             # 获取差异化配置
-            private_config = self._initialize_private_config()
+            # private_config = self._initialize_private_config()
+            private_config = None
             # 异步初始化
             self.executor.submit(self._initialize_components, private_config)
             # tts 消化线程
@@ -276,7 +277,7 @@ class ConnectionHandler:
         if private_config is not None:
             self._initialize_models(private_config)
         else:
-            self.prompt = self.config["prompt"]
+            self.prompt = self.device_config.get_config_value("prompt")
             self.change_system_prompt(self.prompt)
         """加载记忆"""
         self._initialize_memory()

@@ -25,6 +25,7 @@ from core.utils.auth_code_gen import AuthCodeGenerator
 from config.device_config import DeviceConfig
 from core.utils import tts
 from core.infra.mysql.user_device import UserDevice
+from config.config import DEFENSIVE_PROMPTS
 
 TAG = __name__
 
@@ -214,10 +215,21 @@ class ConnectionHandler:
             await handleAudioMessage(self, message)
 
     def _initialize_components(self):
-        self.prompt = self.device_config.get_config_value("prompt",self.config["prompt"])
+        self.prompt = self.device_config.get_config_value("prompt", self.config["prompt"])
+        self.prompt += DEFENSIVE_PROMPTS
         self.client_ip_info = get_ip_info(self.client_ip)
         self.logger.bind(tag=TAG).info(f"Client ip info: {self.client_ip_info}")
-        self.prompt = self.prompt + f"\n我在:{self.client_ip_info}"
+        if self.client_ip_info and any(self.client_ip_info.values()):
+            location = []
+            if self.client_ip_info.get("country"):
+                location.append(self.client_ip_info["country"])
+            if self.client_ip_info.get("region"):
+                location.append(self.client_ip_info["region"]) 
+            if self.client_ip_info.get("city"):
+                location.append(self.client_ip_info["city"])
+            if location:
+                self.prompt = self.prompt + f"\n我在:{' '.join(location)}"
+        
         self.dialogue.put(Message(role="system", content=self.prompt))
 
         self.func_handler = FunctionHandler(self.config)

@@ -26,7 +26,7 @@ class LLMProvider(LLMProviderBase):
     def response(self, session_id, dialogue, config = None):
         
         try:
-            logger.bind(tag=TAG).info(f"response: ",dialogue)
+            # logger.bind(tag=TAG).info(f"response: ",dialogue)
             client = self._get_or_create_client(config)
             max_tokens = config.get("max_tokens", 500)
             responses = client.chat.completions.create(
@@ -61,8 +61,8 @@ class LLMProvider(LLMProviderBase):
     def response_with_functions(self, session_id, dialogue, functions=None,config=None):
        
         try:
-            logger.bind(tag=TAG).info(f"response_with_functions: {dialogue}")
-            logger.bind(tag=TAG).info(f"functions: {functions}")
+            # logger.bind(tag=TAG).info(f"response_with_functions: {dialogue}")
+            # logger.bind(tag=TAG).info(f"functions: {functions}")
             client = self._get_or_create_client(config)
             stream = client.chat.completions.create(
                 model=config.get("model_name"),

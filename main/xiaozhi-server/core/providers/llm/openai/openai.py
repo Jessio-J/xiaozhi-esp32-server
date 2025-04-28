@@ -1,4 +1,5 @@
 import openai
+from openai.types import CompletionUsage
 from config.logger import setup_logging
 from core.utils.util import check_model_key
 from core.providers.llm.base import LLMProviderBase
@@ -40,18 +41,22 @@ class LLMProvider(LLMProviderBase):
             for chunk in responses:
                 try:
                     # 检查是否存在有效的choice且content不为空
-                    delta = chunk.choices[0].delta if getattr(chunk, 'choices', None) else None
-                    content = delta.content if hasattr(delta, 'content') else ''
+                    delta = (
+                        chunk.choices[0].delta
+                        if getattr(chunk, "choices", None)
+                        else None
+                    )
+                    content = delta.content if hasattr(delta, "content") else ""
                 except IndexError:
-                    content = ''
+                    content = ""
                 if content:
                     # 处理标签跨多个chunk的情况
-                    if '<think>' in content:
+                    if "<think>" in content:
                         is_active = False
-                        content = content.split('<think>')[0]
-                    if '</think>' in content:
+                        content = content.split("<think>")[0]
+                    if "</think>" in content:
                         is_active = True
-                        content = content.split('</think>')[-1]
+                        content = content.split("</think>")[-1]
                     if is_active:
                         yield content
 
@@ -78,4 +83,4 @@ class LLMProvider(LLMProviderBase):
 
         except Exception as e:
             logger.bind(tag=TAG).error(f"Error in function call streaming: {e}")
-            yield {"type": "content", "content": f"【OpenAI服务响应异常: {e}】"}
+            yield f"【OpenAI服务响应异常: {e}】", None

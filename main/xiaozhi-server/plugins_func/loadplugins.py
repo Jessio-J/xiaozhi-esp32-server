@@ -35,5 +35,3 @@ def auto_import_modules(package_name):
             logger.bind(tag=TAG).info(f"模块  package_name:'{package_name}' ; module_name :'{module_name}'已加载")
         else:
             logger.bind(tag=TAG).info(f"模块 '{module_name}' 不在白名单中，跳过加载")
-
-auto_import_modules('plugins_func.functions')

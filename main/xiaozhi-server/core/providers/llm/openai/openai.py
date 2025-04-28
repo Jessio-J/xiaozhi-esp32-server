@@ -24,8 +24,9 @@ class LLMProvider(LLMProviderBase):
         return self.client_map[model_name]
 
     def response(self, session_id, dialogue, config = None):
-        logger.bind(tag=TAG).info(f"response: {json.dumps(dialogue, ensure_ascii=False)}")
+        
         try:
+            logger.bind(tag=TAG).info(f"response: ",dialogue)
             client = self._get_or_create_client(config)
             max_tokens = config.get("max_tokens", 500)
             responses = client.chat.completions.create(
@@ -58,9 +59,10 @@ class LLMProvider(LLMProviderBase):
             logger.bind(tag=TAG).error(f"Error in response generation: {e}")
 
     def response_with_functions(self, session_id, dialogue, functions=None,config=None):
-        logger.bind(tag=TAG).info(f"response_with_functions: {json.dumps(dialogue, ensure_ascii=False)}")
-        logger.bind(tag=TAG).info(f"functions: {json.dumps(functions, ensure_ascii=False)}")
+       
         try:
+            logger.bind(tag=TAG).info(f"response_with_functions: ",dialogue)
+            logger.bind(tag=TAG).info(f"functions:",functions)
             client = self._get_or_create_client(config)
             stream = client.chat.completions.create(
                 model=config.get("model_name"),

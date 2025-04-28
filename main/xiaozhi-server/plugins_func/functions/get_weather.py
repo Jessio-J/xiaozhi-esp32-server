@@ -108,7 +108,7 @@ WEATHER_CODE_MAP = {
 
 
 def fetch_city_info(location, api_key):
-    url = f"https://geoapi.qweather.com/v2/city/lookup?key={api_key}&location={location}&lang=zh"
+    url = f"https://mr57rjb7mr.re.qweatherapi.com/geo/v2/city/lookup?key={api_key}&location={location}&lang=zh"
     response = requests.get(url, headers=HEADERS).json()
     return response.get("location", [])[0] if response.get("location") else None
 

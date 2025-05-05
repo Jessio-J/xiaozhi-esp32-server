@@ -238,8 +238,10 @@ class ConnectionHandler:
             try:
                 async for message in self.websocket:
                     await self._route_message(message)
-            except websockets.exceptions.ConnectionClosed:
-                self.logger.bind(tag=TAG).info("客户端断开连接")
+            except websockets.exceptions.ConnectionClosed as e:
+                self.logger.bind(tag=TAG).info(f"客户端断开连接: {e}, message={message}")
+            except Exception as e:
+                self.logger.bind(tag=TAG).error(f"处理消息时发生错误: {e}, message={message}")
 
         except AuthenticationError as e:
             self.logger.bind(tag=TAG).error(f"Authentication failed: {str(e)}")

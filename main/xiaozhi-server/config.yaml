@@ -388,6 +388,10 @@ TTS:
     appid: 8198033727
     access_token: tXKDeTx21hqBwSZJGefTcjybY2pGyfq_
     cluster: volcano_tts
+  CosyVoice:
+    # 定义TTS API类型
+    type: cosyvoice
+    output_dir: tmp/
   CosyVoiceSiliconflow:
     type: siliconflow
     # 硅基流动TTS

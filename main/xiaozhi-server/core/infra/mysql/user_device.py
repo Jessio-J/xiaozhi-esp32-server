@@ -24,21 +24,32 @@ class UserDevice(BaseModel):
         update = "INSERT INTO device_bind (deviceMac, deviceConfigId, userId, deviceName) VALUES (%s, %s, 9, %s)"
         return self.execute_update(update, (device_id, device_config_id,device_name))
 
-    def get_device_config(self, device_id: str) -> Optional[Dict[str, Any]]:
+    def get_device_config(self, device_id: str,device_config_id: str) -> Optional[Dict[str, Any]]:
         """
         获取设备配置
         :param device_id: 设备ID
         :return: 设备配置信息
         """
-        query = """
-            select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
-            (select d.*, a.name appName, a.preset
-            from (select b.deviceMac, c.* from device_bind b
-                left join device_config c on b.deviceConfigId = c.id where deviceMac = %s) d
-            left join app a on d.relatedAppId = a.id) f
-            left join models m on f.modelId = m.id;
-        """
-        result = self.execute_query(query, (device_id,))
+        if device_config_id:
+            query = """
+                    select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
+                (select d.*, a.name appName, a.preset
+                from (select b.deviceMac, c.* from device_bind b
+                    left join device_config c on  c.id = %s where b.deviceMac = %s) d
+                left join app a on d.relatedAppId = a.id) f
+                left join models m on f.modelId = m.id;
+                    """
+            result = self.execute_query(query, (device_config_id,device_id))
+        else:
+            query = """
+                select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
+                (select d.*, a.name appName, a.preset
+                from (select b.deviceMac, c.* from device_bind b
+                    left join device_config c on b.deviceConfigId = c.id where deviceMac = %s) d
+                left join app a on d.relatedAppId = a.id) f
+                left join models m on f.modelId = m.id;
+            """
+            result = self.execute_query(query, (device_id,))
         if result:
             return result[0]
         return None

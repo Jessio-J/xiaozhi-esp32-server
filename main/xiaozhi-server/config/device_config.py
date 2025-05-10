@@ -5,7 +5,7 @@ TAG = __name__
 class DeviceConfig:
     """设备配置管理类"""
     
-    def __init__(self, device_mac: str, user_device: UserDevice):
+    def __init__(self, device_mac: str, user_device: UserDevice,device_config_id: str):
         """初始化设备配置管理
         
         Args:
@@ -14,6 +14,7 @@ class DeviceConfig:
         """
         self.device_mac = device_mac
         self.user_device_dao = user_device
+        self.device_config_id = device_config_id
         self.config_data = None
         self.logger = setup_logging()
     
@@ -24,7 +25,7 @@ class DeviceConfig:
             Dict[str, Any]: 设备配置信息
         """
         try:
-            config_data_from_db = self.user_device_dao.get_device_config(self.device_mac)
+            config_data_from_db = self.user_device_dao.get_device_config(self.device_mac,self.device_config_id)
             llm_config = {
                 "model_name": config_data_from_db.get("model", "gpt-4o-mini"),
                 "max_tokens": config_data_from_db.get("maxResponseTokens", 4096),

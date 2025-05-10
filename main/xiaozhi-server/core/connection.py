@@ -199,7 +199,7 @@ class ConnectionHandler:
                     self.logger.bind(tag=TAG).info(f"Device registration took {register_time:.2f} ms")
                     
                     start_time = time.time()
-                    self.device_config = DeviceConfig(device_id, user_device)
+                    self.device_config = DeviceConfig(device_id, user_device,device_config_id)
                     self.device_config.load_config()
                     config_load_time = (time.time() - start_time) * 1000
                     self.logger.bind(tag=TAG).info(f"Device config loading took {config_load_time:.2f} ms")

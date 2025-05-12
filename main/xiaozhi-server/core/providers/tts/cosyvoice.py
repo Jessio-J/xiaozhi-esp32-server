@@ -11,7 +11,8 @@ logger = setup_logging()
 
 class TTSProvider(TTSProviderBase):
     def __init__(self, config, delete_audio_file):
-        super().__init__(config, delete_audio_file=False)
+        super().__init__(config, delete_audio_file)
+        self.logger = setup_logging()
         dashscope.api_key = "sk-8726c8fae0864f679c56cf6c5a845cb5"
         # 模型
         self.model = "cosyvoice-v2"

@@ -17,8 +17,6 @@ class TTSProvider(TTSProviderBase):
         self.model = "cosyvoice-v2"
         # 音色
         self.voice = "longxiaochun_v2"
-        # 实例化SpeechSynthesizer，并在构造方法中传入模型（model）、音色（voice）等请求参数
-        self.synthesizer = SpeechSynthesizer(model=self.model, voice=self.voice, format=AudioFormat.WAV_16000HZ_MONO_16BIT)
         self.format = config.get("format", "wav")
         self.output_file = config.get("output_dir", "tmp/")
 
@@ -28,11 +26,12 @@ class TTSProvider(TTSProviderBase):
     async def text_to_speak(self, text, output_file):
         # 发送待合成文本，获取二进制音频
         self.logger.bind(tag=TAG).error(f"cosyvoice尝试生成text: {text}")
-        audio = self.synthesizer.call(text)
-        logger.bind(tag=TAG).error(f"[cosyvoice] requestId: {self.synthesizer.get_last_request_id()}, first package delay ms: {self.synthesizer.get_first_package_delay()}")
+        synthesizer = SpeechSynthesizer(model=self.model, voice=self.voice, format=AudioFormat.WAV_16000HZ_MONO_16BIT)
+        audio = synthesizer.call(text)
+        logger.bind(tag=TAG).error(f"[cosyvoice] requestId: {synthesizer.get_last_request_id()}, first package delay ms: {synthesizer.get_first_package_delay()}")
 
         if audio:
             with open(output_file, "wb") as file:
                 file.write(audio)
         else:
-            logger.bind(tag=TAG).error(f"cosyvoice请求失败: {self.synthesizer.get_response}")
+            logger.bind(tag=TAG).error(f"cosyvoice请求失败: {synthesizer.get_response}")

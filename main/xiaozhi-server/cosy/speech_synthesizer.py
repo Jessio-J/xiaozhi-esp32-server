@@ -5,6 +5,7 @@ import platform
 import threading
 import time
 import uuid
+import ssl
 from enum import Enum, unique
 
 import websocket

@@ -14,11 +14,12 @@ def main():
     voice = "longxiaochun_v2"
 
     # 实例化SpeechSynthesizer，并在构造方法中传入模型（model）、音色（voice）等请求参数
-    synthesizer = SpeechSynthesizer(model=model, voice=voice,format=AudioFormat.WAV_16000HZ_MONO_16BIT)
+    
     # 发送待合成文本，获取二进制音频
 
     
     async def synthesize_text():
+        synthesizer = SpeechSynthesizer(model=model, voice=voice,format=AudioFormat.WAV_16000HZ_MONO_16BIT)
         text = "你好不好啊啊啊啊，在干什么啊？"
         audio_result = synthesizer.call(text)
         print('[Metric] requestId: {}, first package delay ms: {}'.format(

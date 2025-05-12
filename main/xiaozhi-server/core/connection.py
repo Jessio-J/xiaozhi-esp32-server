@@ -907,6 +907,7 @@ class ConnectionHandler:
             return None, text, text_index
         
         tts_config = self.device_config.get_config_value("tts")
+        self.logger.bind(tag=TAG).info(f"tts配置: {tts_config}")
         if tts_config is None:
             self.logger.bind(tag=TAG).info(f"tts配置为空")
             return None, text, text_index

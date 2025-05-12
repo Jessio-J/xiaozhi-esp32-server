@@ -39,6 +39,7 @@ class UserDevice(BaseModel):
                 left join app a on d.relatedAppId = a.id) f
                 left join models m on f.modelId = m.id;
                     """
+            self.logger.bind(tag=TAG).info(f"查询设备配置: {query}, {device_config_id}, {device_id}")
             result = self.execute_query(query, (device_config_id,device_id))
         else:
             query = """
@@ -49,6 +50,7 @@ class UserDevice(BaseModel):
                 left join app a on d.relatedAppId = a.id) f
                 left join models m on f.modelId = m.id;
             """
+            self.logger.bind(tag=TAG).info(f"查询设备配置: {query}, {device_id}")
             result = self.execute_query(query, (device_id,))
         if result:
             return result[0]

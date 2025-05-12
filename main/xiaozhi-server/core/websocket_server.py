@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import certifi
+import ssl
 from config.logger import setup_logging
 from core.connection import ConnectionHandler
 from core.utils.util import get_local_ip, initialize_modules

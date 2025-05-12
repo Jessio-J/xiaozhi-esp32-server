@@ -1,7 +1,5 @@
 import asyncio
 import websockets
-import certifi
-import ssl
 from config.logger import setup_logging
 from core.connection import ConnectionHandler
 from core.utils.util import get_local_ip, initialize_modules
@@ -28,9 +26,7 @@ class WebSocketServer:
         server_config = self.config["server"]
         host = server_config.get("ip", "0.0.0.0")
         port = int(server_config.get("port", 8000))
-        # 获取certifi的证书路径
-        ssl_context = ssl.create_default_context(cafile=certifi.where())
-        async with websockets.serve(self._handle_connection, host, port, ssl=ssl_context):
+        async with websockets.serve(self._handle_connection, host, port):
             await asyncio.Future()
 
     async def _handle_connection(self, websocket):

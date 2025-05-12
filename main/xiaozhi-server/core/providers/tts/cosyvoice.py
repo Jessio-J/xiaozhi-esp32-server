@@ -5,7 +5,7 @@ from config.logger import setup_logging
 from datetime import datetime
 from core.providers.tts.base import TTSProviderBase
 import dashscope
-from dashscope.audio.tts_v2 import *
+from cosy import *
 TAG = __name__
 logger = setup_logging()
 

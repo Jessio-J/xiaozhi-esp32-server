@@ -32,7 +32,7 @@ class UserDevice(BaseModel):
         """
         if device_config_id:
             query = """
-                    select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
+                    select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,f.voicePlatform,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
                 (select d.*, a.name appName, a.preset
                 from (select b.deviceMac, c.* from device_bind b
                     left join device_config c on  c.id = %s where b.deviceMac = %s) d
@@ -42,7 +42,7 @@ class UserDevice(BaseModel):
             result = self.execute_query(query, (device_config_id,device_id))
         else:
             query = """
-                select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
+                select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,f.voicePlatform,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
                 (select d.*, a.name appName, a.preset
                 from (select b.deviceMac, c.* from device_bind b
                     left join device_config c on b.deviceConfigId = c.id where deviceMac = %s) d

@@ -41,7 +41,7 @@ class DeviceConfig:
                "voice": config_data_from_db.get("voiceKey", ""),
                "api_url": "https://openspeech.bytedance.com/api/v1/tts",
                "authorization": "Bearer;",
-               "platform": "doubao",
+               "platform": config_data_from_db.get("voicePlatform", "doubao"),
                "output_dir": "tmp/"
             }
             result = {

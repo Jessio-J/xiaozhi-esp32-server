@@ -5,7 +5,7 @@ MYSQL_CONFIG: Dict[str, Any] = {
     'host': 'localhost',
     'port': 3306,
     'user': 'root',
-    'password': 'b5bd5cd81fc2ab28',
+    'password': 'cb2614840beeb528',
     'database': 'samewayai',
     'charset': 'utf8mb4',
     

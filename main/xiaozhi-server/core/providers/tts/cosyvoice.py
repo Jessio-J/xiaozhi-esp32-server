@@ -28,7 +28,7 @@ class TTSProvider(TTSProviderBase):
         self.logger.bind(tag=TAG).error(f"cosyvoice尝试生成text: {text}")
         synthesizer = SpeechSynthesizer(model=self.model, voice=self.voice, format=AudioFormat.WAV_16000HZ_MONO_16BIT)
         audio = synthesizer.call(text)
-        logger.bind(tag=TAG).error(f"[cosyvoice] requestId: {synthesizer.get_last_request_id()}, first package delay ms: {synthesizer.get_first_package_delay()}")
+        self.logger.bind(tag=TAG).error(f"[cosyvoice] requestId: {synthesizer.get_last_request_id()}, first package delay ms: {synthesizer.get_first_package_delay()}")
 
         if audio:
             with open(output_file, "wb") as file:

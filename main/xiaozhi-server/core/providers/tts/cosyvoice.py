@@ -12,7 +12,7 @@ logger = setup_logging()
 class TTSProvider(TTSProviderBase):
     def __init__(self, config, delete_audio_file):
         super().__init__(config, delete_audio_file=False)
-        dashscope.api_key = "sk-c00fd26e71e847cca27a97ccb8bf4961"
+        dashscope.api_key = "sk-8726c8fae0864f679c56cf6c5a845cb5"
         # 模型
         self.model = "cosyvoice-v2"
         # 音色
@@ -27,6 +27,7 @@ class TTSProvider(TTSProviderBase):
 
     async def text_to_speak(self, text, output_file):
         # 发送待合成文本，获取二进制音频
+        self.logger.bind(tag=TAG).error(f"cosyvoice尝试生成text: {text}")
         audio = self.synthesizer.call(text)
         logger.bind(tag=TAG).error(f"[cosyvoice] requestId: {self.synthesizer.get_last_request_id()}, first package delay ms: {self.synthesizer.get_first_package_delay()}")
 

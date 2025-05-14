@@ -469,8 +469,6 @@ class ConnectionHandler:
         self.dialogue.update_system_message(self.prompt)
 
     def chat(self, query):
-        # todo 这里临时加一下返回字数限制
-        query+="\n\n （注意：你的回答字数限制在50字以内，且不要对注意事项进行回复评论）"
         self.dialogue.put(Message(role="user", content=query))
 
         response_message = []
@@ -555,8 +553,6 @@ class ConnectionHandler:
         """Chat with function calling for intent detection using streaming"""
 
         if not tool_call:
-            # todo 这里临时加一下返回字数限制
-            query+="\n\n （注意：你的回答字数限制在50字以内，且不要对注意事项进行回复评论）"
             self.dialogue.put(Message(role="user", content=query))
 
         # Define intent functions

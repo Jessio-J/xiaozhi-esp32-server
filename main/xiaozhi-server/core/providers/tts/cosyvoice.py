@@ -15,9 +15,9 @@ class TTSProvider(TTSProviderBase):
         self.logger = setup_logging()
         dashscope.api_key = "sk-8726c8fae0864f679c56cf6c5a845cb5"
         # 模型
-        self.model = "cosyvoice-ctr"
+        self.model = "cosyvoice-v2"
         # 音色
-        self.voice = "longwan"
+        self.voice = "longxiaochun_v2"
         self.format = config.get("format", "wav")
         self.output_file = config.get("output_dir", "tmp/")
 

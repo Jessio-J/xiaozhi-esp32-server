@@ -15,10 +15,10 @@ def auto_import_modules(package_name):
     """
     # 定义白名单列表
     whitelist = [
-        # 'handle_exit_intent',
-        # 'get_time',
-        # 'raise_and_lower_the_volume',
-        # 'get_weather'
+        'handle_exit_intent',
+        'get_time',
+        'raise_and_lower_the_volume',
+        'get_weather'
     ]
 
     # 获取包的路径

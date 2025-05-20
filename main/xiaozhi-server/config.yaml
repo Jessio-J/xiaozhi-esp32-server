@@ -150,7 +150,7 @@ selected_module:
   # 语音活动检测模块，默认使用SileroVAD模型
   VAD: SileroVAD
   # 语音识别模块，默认使用FunASR本地模型
-  ASR: FunASR
+  ASR: GummyASR
   # 将根据配置名称对应的type调用实际的LLM适配器
   LLM: ChatGLMLLM
   # TTS将根据配置名称对应的type调用实际的TTS适配器
@@ -232,6 +232,16 @@ ASR:
     secret_id: 你的腾讯语音合成服务secret_id
     secret_key: 你的腾讯语音合成服务secret_key
     output_dir: tmp/
+  GummyASR:
+    type: gummy
+    output_dir: tmp/
+    api_key: sk-0ebf83d73eac497bba8f23b0b3ad40a6
+    model: gummy-chat-v1
+    format: pcm
+    sample_rate: 16000
+    transcription_enabled: true
+    translation_enabled: false
+    translation_target_languages: ["en"]
 VAD:
   SileroVAD:
     type: silero

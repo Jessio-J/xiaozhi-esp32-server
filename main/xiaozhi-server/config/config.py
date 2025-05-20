@@ -2,11 +2,11 @@ from typing import Dict, Any
 
 # MySQL数据库配置
 MYSQL_CONFIG: Dict[str, Any] = {
-    'host': 'localhost',
+    'host': '106.52.252.80',
     'port': 3306,
     'user': 'root',
-    'password': 'cb2614840beeb528',
-    'database': 'samewayai',
+    'password': 'b5bd5cd81fc2ab28',
+    'database': 'melontalkai',
     'charset': 'utf8mb4',
     
     # 连接池配置

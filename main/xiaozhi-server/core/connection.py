@@ -156,13 +156,13 @@ class ConnectionHandler:
             await self.auth.authenticate(self.headers)
 
             device_id = self.headers.get("device-id", None)
-            device_role = self.headers.get("device-role", None)
+            device_config_id = self.headers.get("device-config-id", None)
             self.memory.init_memory(device_id, self.llm)
             self.intent.set_llm(self.llm)
 
             # Load private configuration if device_id is provided
             bUsePrivateConfig = self.config.get("use_private_config", False)
-            self.logger.bind(tag=TAG).info(f"bUsePrivateConfig: {bUsePrivateConfig}, device_id: {device_id}, device_role: {device_role}")
+            self.logger.bind(tag=TAG).info(f"bUsePrivateConfig: {bUsePrivateConfig}, device_id: {device_id}, device_config_id: {device_config_id}")
             if bUsePrivateConfig and device_id:
                 try:
                     self.private_config = PrivateConfig(device_id, self.config, self.auth_code_gen)
@@ -193,7 +193,6 @@ class ConnectionHandler:
                     self.logger.bind(tag=TAG).info(f"Registering device {device_id} to database")
                     start_time = time.time()
                     user_device = UserDevice()
-                    device_config_id = self.convert_device_role(device_role)
                     user_device.register_device(device_id, device_config_id)
                     register_time = (time.time() - start_time) * 1000
                     self.logger.bind(tag=TAG).info(f"Device registration took {register_time:.2f} ms")
@@ -285,6 +284,8 @@ class ConnectionHandler:
         self._initialize_memory()
         """加载意图识别"""
         self._initialize_intent()
+        """加载asr"""
+        self._initialize_asr()
 
     def _initialize_private_config(self):
         read_config_from_api = self.config.get("read_config_from_api", False)
@@ -463,6 +464,27 @@ class ConnectionHandler:
             self.mcp_manager.initialize_servers(), self.loop
         )
 
+    def _initialize_asr(self):
+        """初始化asr"""
+        if self.device_config.get_config_value("asr", None) is not None:
+            try:
+                self.config["selected_module"]["ASR"] = self.device_config.get_config_value("asr")["asrType"]
+                modules = initialize_modules(
+                    self.logger,
+                    self.config,
+                    False,
+                    True,
+                    False,
+                    False,
+                    False,
+                    False,
+                )
+                self.asr = modules["asr"]
+            except Exception as e:
+                self.logger.bind(tag=TAG).error(f"初始化组件失败: {e}")
+                modules = {}
+        
+    
     def change_system_prompt(self, prompt):
         self.prompt = prompt
         # 更新系统prompt至上下文

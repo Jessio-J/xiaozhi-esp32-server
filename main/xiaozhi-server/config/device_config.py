@@ -42,12 +42,22 @@ class DeviceConfig:
                "api_url": "https://openspeech.bytedance.com/api/v1/tts",
                "authorization": "Bearer;",
                "platform": config_data_from_db.get("voicePlatform", "doubao"),
+               "voice_model": config_data_from_db.get("voiceModel", "doubao"),
                "output_dir": "tmp/"
+            }
+
+            asr_config = {
+                "type": config_data_from_db.get("asrType", "gummy"),
+                "output_dir": "tmp/",
+                "api_key": config_data_from_db.get("asrKey", ""),
+                "model": config_data_from_db.get("asrModel", "gummy-chat-v1"),
+                "format": config_data_from_db.get("asrFormat", "pcm"),
             }
             result = {
                 "prompt": config_data_from_db.get("preset", ""),
                 "llm": llm_config,
                 "tts": tts_config,
+                "asr": asr_config,
             }
             self.logger.bind(tag=TAG).info(f"init config done :\n{result}")
             self.config_data = result

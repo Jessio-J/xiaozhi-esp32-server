@@ -32,12 +32,13 @@ class UserDevice(BaseModel):
         """
         if device_config_id:
             query = """
-                    select f.id,f.configName,f.voiceType,f.voiceKey,f.appName,f.preset,f.voicePlatform,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens from
-                (select d.*, a.name appName, a.preset
-                from (select b.deviceMac, c.* from device_bind b
-                    left join device_config c on  c.id = %s where b.deviceMac = %s) d
-                left join app a on d.relatedAppId = a.id) f
-                left join models m on f.modelId = m.id;
+                   select f.configName,f.voiceKey,f.voicePlatform,f.voiceModel,f.appName,f.preset,m.model,m.proxyUrl,m.key modelKey,m.maxModelTokens,m.maxResponseTokens,f.asrType from
+    (select vv.deviceMac,vv.configName,vv.relatedAppId,vv.voice_id,vv.platform voicePlatform,vv.voice_source voiceModel,vv.voice_id voiceKey, a.name appName, a.preset,vv.modelId,vv.asrType
+     from ( select d.*,v.platform,v.voice_source,v.voice_id from
+                                                (select b.deviceMac, c.configName,c.relatedAppId,c.voiceId,c.modelId,c.asrType from device_bind b
+                     join device_config c on  c.id = %s and b.deviceMac = %s) d join voice v on d.voiceId = v.id) vv
+              left join app a on vv.relatedAppId = a.id) f
+        left join models m on f.modelId = m.id;
                     """
             self.logger.bind(tag=TAG).info(f"查询设备配置: {query}, {device_config_id}, {device_id}")
             result = self.execute_query(query, (device_config_id,device_id))

@@ -6,7 +6,7 @@ import wave
 from typing import Optional, Tuple, List
 import asyncio
 import dashscope
-from dashscope.audio.asr import *
+from gummy import *
 
 from core.providers.asr.base import ASRProviderBase
 from config.logger import setup_logging
